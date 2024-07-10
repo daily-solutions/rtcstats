@@ -1,0 +1,14 @@
+{
+  "name": "rtcstats",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild index.js --bundle --minify --sourcemap --outfile=build/rtcstats.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "esbuild": "^0.21.1"
+  }
+}
