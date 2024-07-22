@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # RTCStats
 
 ## How it works
@@ -6,7 +8,7 @@ This script acts a shim over the browser's default RTCPeerConnection object.
 
 It periodically (set with the config option `report_interval`) retrieves WebRTC native `getStats()` data and holds a reference to it internally.
 
-Asychronously, this script will run a collection interval (`log_interval`) to retrieve all reports from each active RTCPeerConnection and send the batch to `store()` method. 
+Asychronously, this script will run a collection interval (`log_interval`) to retrieve all reports from each active RTCPeerConnection and send the batch to `store()` method.
 
 For each report, it will also assign both a test and client identifier, as well as a report number to help align the results as a pseudo timeseries.
 
@@ -21,33 +23,30 @@ For each report, it will also assign both a test and client identifier, as well 
 
 Add this to your project like so:
 
-```html
-<script src="build/rtcstats.js" type="text/javascript" test_id="DailyTest" async></script>
-```
-
-... or if using React:
-
 ```js
+import { rtcStats } from "../app/rtcStats";
+
 useEffect(() => {
-    console.info('Adding rtcstats script to page', config);
-    const script = document.createElement('script');
-    script.dataset.clientid = crypto.randomUUID();
-    script.dataset.testid = config.testId;
-    script.src = '/stats.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => document.body.removeChild(script);
-  }, [config, region]);
-
+	const config = {
+		test_id: crypto.randomUUID(),
+		client_id: crypto.randomUUID(),
+	};
+	console.info("Adding rtcstats script to page", config);
+	rtcStats(config);
+}, [config]);
 ```
 
 ## Storing data
 
-`index.js` has a store method that defaults to a noop / console.log.
+`rtcStats.js` has a store method that defaults to a noop / console.log.
 
 Override this method to store data to your backend of choice, e.g. SQLLite
 
+## Adjusting settings
+
+When you initialise rtcStats, you have to pass through a config with a test_id and a client_id.
+Other than that, all other settings are in the constants javascript file. This is where you specify
+what metrics to transform from cumulative to per second metrics, etc.
 
 ## Building
 
